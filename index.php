@@ -58,6 +58,7 @@ function task_count ($task_list, $project_name) {
 	}
 	return $task_amount;
 };
+
 ?>
 
 <!DOCTYPE html>
@@ -141,7 +142,7 @@ function task_count ($task_list, $project_name) {
                 </div>
 
                 <table class="tasks"> 
-                  <?php foreach ($tasks as $property => $value): ?> 
+                 <?php foreach ($tasks as $property => $value): ?> 
                     <?php if(!$value["isDone"] || $show_complete_tasks): ?>
 
                     <tr class="tasks__item task 
@@ -163,7 +164,6 @@ function task_count ($task_list, $project_name) {
                           <span class="checkbox__text"><?=$value["name"]; ?></span>
                         </label>
                       </td>
-
                       <td class="task__file">
                         <a class="download-link" href="#">Home.psd</a>
                       </td>
