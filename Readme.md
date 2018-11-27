@@ -1,7 +1,7 @@
 # Личный проект «Дела в Порядке»
 
 * Студент: [Инна Клементьева](https://up.htmlacademy.ru/php/7/user/889693).
-* Наставник: [Евгений Шумейко](https://htmlacademy.ru/profile/id910113).
+* Наставник: [Олег Скляров](https://htmlacademy.ru/profile/id926687).
 
 ---
 
