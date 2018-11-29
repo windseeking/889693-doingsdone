@@ -46,8 +46,8 @@
           <span class="checkbox__text"><?= filter_tags($value['name']); ?></span>
         </label>
       </td>
+      
       <td class="task__date"><?= filter_tags($value['date']); ?></td>
-
       <td class="task__controls"></td>
     </tr>
   <?php endif; ?>
