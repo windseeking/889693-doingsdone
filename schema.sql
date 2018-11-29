@@ -1,35 +1,40 @@
 CREATE DATABASE doingsdone
-	DEFAULT CHARACTER SET utf8
+  DEFAULT CHARACTER SET utf8
 	DEFAULT COLLATE utf8_general_ci;
 
+USE doingsdone;
 
-CREATE TABLE `users` 
+
+CREATE TABLE IF NOT EXISTS `user`
 (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`email` char(255) NOT NULL UNIQUE,
 	`name` char(255) NOT NULL,
 	`password` char(64),
-	`date_reg` timestamp default current_timestamp
+	`created_at` timestamp default current_timestamp
 );
 
-CREATE TABLE `projects` 
+CREATE TABLE IF NOT EXISTS `project`
 (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`name` char(255) NOT NULL UNIQUE,
-	`user_id` int(11) unsigned NOT NULL
+	`user_id` int(11) unsigned NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 );
 
-CREATE TABLE `tasks` 
+CREATE TABLE IF NOT EXISTS `task`
 (
 	`id` int(11) unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`category_id` int(11) unsigned NOT NULL,
+	`project_id` int(11) unsigned NOT NULL,
 	`user_id` int(11) unsigned NOT NULL,
-	`date_create` timestamp default current_timestamp NOT NULL,
-	`date_done` datetime,
+	`created_at` timestamp default current_timestamp NOT NULL,
+	`done_at` datetime,
 	`status` int(11) unsigned NOT NULL,
 	`title` char(255) NOT NULL,
 	`deadline` datetime,
-	`file` char(255)
+	`fileUrl` char(255),
+	FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+	FOREIGN KEY (`project_id`) REFERENCES `project` (`id`)
 );
 
-CREATE INDEX task ON tasks(title);
+CREATE INDEX task ON task(title);
