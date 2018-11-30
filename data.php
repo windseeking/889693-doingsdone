@@ -1,5 +1,8 @@
 <?php
 
+date_default_timezone_set('Europe/Moscow');
+setlocale(LC_ALL, 'ru_RU');
+
 $show_complete_tasks = rand(0, 1);
 
 $projects = ['Входящие', 'Учеба', 'Работа', 'Домашние дела', 'Авто'];
@@ -7,7 +10,7 @@ $projects = ['Входящие', 'Учеба', 'Работа', 'Домашние
 $tasks = [
   [
     'name' => 'Собеседование в IT компании',
-    'date' => '01.12.2018',
+    'date' => '24.11.2018',
     'category' => 'Работа',
     'isDone' => false
   ],
@@ -42,5 +45,3 @@ $tasks = [
     'isDone' => false
   ],
 ];
-
-?>
