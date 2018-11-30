@@ -41,7 +41,6 @@ function almost_elapsed(string $elapse_date): bool {
     $diff = $deadline - $now;
     if ($diff <= 86400 && !empty($elapse_date)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
