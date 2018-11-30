@@ -6,20 +6,20 @@ services:
     container_name: doingsdone-php-fpm
     working_dir: /application
     volumes:
-      - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
-      - .:/application
+    - ./docker/php-fpm/php.ini:/usr/local/etc/php/php.ini
+    - .:/application
 
   nginx:
     image: nginx:latest
     container_name: doingsdone-nginx
     working_dir: /application
     ports:
-      - "8081:80"
+    - "8081:80"
     volumes:
-      - .:/application
-      - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    - .:/application
+    - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - php-fpm
+    - php-fpm
 
   mysql:
     container_name: doingsdone-mysql
@@ -27,9 +27,9 @@ services:
       context: ./docker/mysql
       dockerfile: Dockerfile
     volumes:
-      - ./docker/mysql_data:/var/lib/mysql
+    - ./docker/mysql_data:/var/lib/mysql
     ports:
-      - 3307:3306
+    - 3307:3306
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
