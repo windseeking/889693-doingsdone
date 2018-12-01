@@ -29,7 +29,7 @@ SELECT * FROM task WHERE project_id = 1;
 UPDATE task SET status = true WHERE id = 5;
 
 -- получить все задачи для завтрашнего дня
-SELECT * FROM task WHERE deadline_at = DATEADD(day, 1, current_timestamp);
+SELECT * FROM task WHERE deadline_at = NOW() + INTERVAL 1 DAY;
 
 -- обновить название задачи по её идентификатору
 UPDATE task SET title = 'Купить корм для кошки' WHERE id = 5;
