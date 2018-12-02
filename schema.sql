@@ -41,5 +41,3 @@ CREATE TABLE IF NOT EXISTS `task`
 	CONSTRAINT task_project_id_fk FOREIGN KEY (project_id) REFERENCES project (id),
 	CONSTRAINT task_user_id_fk FOREIGN KEY (user_id) REFERENCES user (id)
 );
-
-CREATE INDEX task ON task(title);
