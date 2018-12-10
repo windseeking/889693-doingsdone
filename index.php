@@ -8,7 +8,7 @@ require_once('functions.php');
 
 $cur_user = 1;
 $projects = get_projects($con, $cur_user);
-$tasks = get_tasks($con, $cur_user);
+$tasks = get_projects($con, $cur_user);
 $show_complete_tasks = rand(0, 1);
 
 $page_title = 'Дела в порядке';

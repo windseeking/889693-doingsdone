@@ -4,7 +4,6 @@ CREATE DATABASE doingsdone
 
 USE doingsdone;
 
-
 CREATE TABLE IF NOT EXISTS `user`
 (
 	`id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -17,10 +16,11 @@ CREATE TABLE IF NOT EXISTS `user`
 CREATE TABLE IF NOT EXISTS `project`
 (
 	`id` int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-	`name` char(255) NOT NULL UNIQUE KEY,
+  `name` char(255) NOT NULL,
 	`user_id` int unsigned NOT NULL,
+	KEY `name` (`name`),
 	KEY project_user_id_fk (user_id),
-  CONSTRAINT project_user_id_fk FOREIGN KEY (user_id) REFERENCES user (id)
+ 	CONSTRAINT project_user_id_fk FOREIGN KEY (user_id) REFERENCES user (id)
 );
 
 CREATE TABLE IF NOT EXISTS `task`

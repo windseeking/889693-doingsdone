@@ -3,4 +3,4 @@
 require_once('functions.php');
 
 $con = mysqli_connect('localhost', 'root', '', 'doingsdone');
-check_connection($con);
+get_connection($con);
