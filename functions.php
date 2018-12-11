@@ -42,8 +42,8 @@ function almost_elapsed(string $elapse_date): bool {
 function get_connection(array $db) {
     $con = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
     if (!$con) {
-        return $page_content = include_template('error.php', ['error' => mysqli_connect_error()]);
-        die('Сайт временно недоступен, попробуйте зайти попозже');
+        $err = mysqli_connect_error();
+        die(include_template('error.php', ['error' => $err]));
     }
     mysqli_set_charset($con, 'utf8');
     return $con;
