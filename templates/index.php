@@ -22,8 +22,8 @@
 
 <table class="tasks">
 <?php foreach ($tasks as $task): ?>
-  <?php if($task['status'] === 0): ?>
-  <tr class="tasks__item task <?= $task['status'] === 1 ? 'task--completed' : ''; ?> <?= almost_elapsed($task['deadline_at']) ? 'task--important' : ''; ?>">
+  <?php if(!$task['status'] || $show_complete_tasks): ?>
+  <tr class="tasks__item task <?= $task['status'] ? 'task--completed' : ''; ?> <?= almost_elapsed($task['deadline_at']) ? 'task--important' : ''; ?>">
       <td class="task__select">
         <label class="checkbox task__checkbox">
           <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?= $task['status'] ? 'checked' : ''; ?>>
@@ -34,22 +34,8 @@
       <td class="task__file">
         <a class="download-link" href="#"></a>
       </td>
-
-      <td class="task__date"><?= filter_tags($task['deadline_at']); ?></td>
-    </tr>
-
-    <?php elseif ($show_complete_tasks): ?>
-    <tr class="tasks__item task task--completed">
-      <td class="task__select">
-        <label class="checkbox task__checkbox">
-          <input class="checkbox__input visually-hidden" type="checkbox" checked>
-          <span class="checkbox__text"><?= filter_tags($task['title']); ?></span>
-        </label>
-      </td>
-      
-      <td class="task__date"><?= filter_tags($task['deadline_at']); ?></td>
-      <td class="task__controls"></td>
-    </tr>
+      <td class="task__date"><?= filter_tags($task['deadline_at']) ? date('d.m.Y', strtotime($task['deadline_at'])) : ''; ?></td>
+  </tr>
   <?php endif; ?>
 <?php endforeach; ?>
 </table>

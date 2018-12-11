@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `task`
 	`user_id` int unsigned NOT NULL,
 	`created_at` timestamp default current_timestamp NOT NULL,
 	`done_at` datetime DEFAULT NULL,
-	`status` int unsigned NOT NULL,
+	`status` int NOT NULL,
 	`title` char(255) NOT NULL,
 	`deadline_at` datetime DEFAULT NULL,
 	`file_url` char(255) DEFAULT NULL,

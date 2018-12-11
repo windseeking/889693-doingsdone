@@ -3,13 +3,15 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once('init.php');
 require_once('functions.php');
+require_once('config/db.php');
+
+$con = get_connection($db);
 
 $cur_user = 1;
+
 $projects = get_projects($con, $cur_user);
-$tasks = get_projects($con, $cur_user);
-$show_complete_tasks = rand(0, 1);
+$tasks = get_tasks($con, $cur_user);
 
 $page_title = 'Дела в порядке';
 
@@ -21,7 +23,7 @@ $page_content = include_template('index.php', [
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title' => $page_title,
-    'projects' => $projects
+    'projects' => $projects,
 ]);
 
 print($layout_content);

@@ -1,12 +1,14 @@
 <?php
 
+$show_complete_tasks = rand(0, 1);
+
 // Шаблонизатор
 function include_template(string $name, array $data): string {
     $name = 'templates/' . $name;
     $result = '';
 
     if (!file_exists($name)) {
-    return $result;
+        return $result;
     }
 
     ob_start();
@@ -19,7 +21,7 @@ function include_template(string $name, array $data): string {
 };
 
 // Защита от XSS-атак
-function filter_tags(?string $str): string {
+function filter_tags($str): string {
     if ($str === null) {
         return '';
     }
@@ -37,20 +39,18 @@ function almost_elapsed(string $elapse_date): bool {
     return false;
 };
 
-// Проверка подключения к БД и установка кодировки
-function get_connection($con) {
+function get_connection(array $db) {
+    $con = mysqli_connect($db['host'], $db['user'], $db['password'], $db['database']);
     if (!$con) {
-        $err = mysqli_connect_error();
-        $content = include_template('error.php', ['error' => $err]);
-        $layout = include_template('layout.php', ['content' => $content]);
-        print($layout);
-        die();
+        return $page_content = include_template('error.php', ['error' => mysqli_connect_error()]);
+        die('Сайт временно недоступен, попробуйте зайти попозже');
     }
     mysqli_set_charset($con, 'utf8');
+    return $con;
 };
 
 // Получение списка проектов для текущего пользователя
-function get_projects($con, $user): array {
+function get_projects($con, int $userId): array {
     $sql =
         'SELECT p.id, p.name, COUNT(t.id) AS task_amount FROM project p '.
         'LEFT JOIN task t ON p.id = t.project_id '.
@@ -66,17 +66,16 @@ function get_projects($con, $user): array {
 };
 
 // Получение списка задач для текущего пользователя
-//function get_tasks($con, $user): array {
-//    $sql =
-//        'SELECT status, title, file_url, deadline_at FROM tasks t' .
-//        'WHERE user_id = 1 '.
-//        'ORDER BY created_at';
-//
-//    $res = mysqli_query($con, $sql);
-//
-//    if (!$res) {
-//        $err = mysqli_error($con);
-//        print('Ошибка получения списка задач: ' . $err);
-//    }
-//    return mysqli_fetch_all($res, MYSQLI_ASSOC);
-//};
+function get_tasks($con, $userId): array {
+    $sql =
+        'SELECT * FROM task ' .
+        'WHERE user_id = 1 ORDER BY deadline_at DESC';
+
+    $res = mysqli_query($con, $sql);
+
+    if (!$res) {
+        $err = mysqli_error($con);
+        print('Ошибка получения списка задач: ' . $err);
+    }
+    return mysqli_fetch_all($res, MYSQLI_ASSOC);
+};
