@@ -1,5 +1,7 @@
 <?php
 
+require_once('mysql_helper.php');
+
 $show_complete_tasks = rand(0, 1);
 
 // Шаблонизатор
@@ -49,33 +51,57 @@ function get_connection(array $db) {
     return $con;
 };
 
-// Получение списка проектов для текущего пользователя
-function get_projects($con, int $userId): array {
+// Получение проекта по ID
+function get_projects_byId($project_id, $con) {
     $sql =
-        'SELECT p.id, p.name, COUNT(t.id) AS task_amount FROM project p '.
-        'LEFT JOIN task t ON p.id = t.project_id '.
-        'WHERE p.user_id = 1 GROUP BY p.id';
+        "SELECT id AS project_id, name FROM project ".
+        "WHERE id = ?";
+    $values = [$project_id];
+    $project = db_fetch_data($con, $sql, $values);
+    return $project ? $project[0] : null;
+}
 
-    $res = mysqli_query($con, $sql);
-
-    if (!$res) {
-        $err = mysqli_error($con);
-        print('Ошибка получения списка проектов: ' . $err);
-    }
-    return mysqli_fetch_all($res, MYSQLI_ASSOC);
+// Получение ссылки на проект
+function get_url(int $project_id): string {
+    $scriptname = 'index.php';
+    $query = http_build_query($project_id);
+    $url = '/' . $scriptname . '?' . $query;
+    return $url;
 };
 
-// Получение списка задач для текущего пользователя
-function get_tasks($con, $userId): array {
+// Получение проектов для текущего пользователя
+function get_projects_byUser($user_id, $con) {
     $sql =
-        'SELECT * FROM task ' .
-        'WHERE user_id = 1 ORDER BY deadline_at DESC';
+        "SELECT p.id, p.name, COUNT(t.id) AS task_amount FROM project p ".
+        "JOIN user u ON p.user_id = u.id ".
+        "LEFT JOIN task t ON p.id = t.project_id ".
+        "WHERE p.user_id = ? GROUP BY p.id ".
+        "ORDER BY p.name";
+    $values = [$user_id];
+    $projects = db_fetch_data($con, $sql, $values);
+    return $projects;
+};
 
-    $res = mysqli_query($con, $sql);
+// Получение задач для текущего пользователя
+function get_tasks_byUser($user_id, $con) {
+    $sql =
+        "SELECT t.title, t.created_at, t.deadline_at, t.status, t.file_url, p.name AS project_name FROM task t ".
+        "JOIN user u ON t.user_id = u.id ".
+        "JOIN project p ON t.project_id = p.id ".
+        "WHERE t.user_id = ?";
+    $values = [$user_id];
+    $tasks = db_fetch_data($con, $sql, $values);
+    return $tasks;
+};
 
-    if (!$res) {
-        $err = mysqli_error($con);
-        print('Ошибка получения списка задач: ' . $err);
-    }
-    return mysqli_fetch_all($res, MYSQLI_ASSOC);
+// Получение задач для текущего проекта
+function get_tasks_byProject($project_id, $con) {
+    $sql =
+        "SELECT t.title, t.created_at, t.deadline_at, t.status, t.file_url, p.id AS project_id, p.name AS project_name FROM task t ".
+        "JOIN user u ON t.user_id = u.id ".
+        "JOIN project p ON t.project_id = p.id ".
+        "WHERE project_id = ?";
+    $values = [$project_id];
+    $tasks = db_fetch_data($con, $sql, $values);
+    return $tasks;
 };
