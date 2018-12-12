@@ -23,7 +23,6 @@ else {
     $tasks = get_tasks_by_user_id($current_user_id, $con);
 }
 
-
 $page_title = 'Дела в порядке';
 
 $page_content = include_template('index.php', [
