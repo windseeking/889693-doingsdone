@@ -23,7 +23,7 @@ function include_template(string $name, array $data): string {
 };
 
 // Защита от XSS-атак
-function filter_tags($str): string {
+function filter_tags(string $str = null): string {
     return $str === null ? '' : strip_tags($str);
 };
 
