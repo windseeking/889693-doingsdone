@@ -24,14 +24,11 @@ function include_template(string $name, array $data): string {
 
 // Защита от XSS-атак
 function filter_tags($str): string {
-    if ($str === null) {
-        return '';
-    }
     return $str === null ? '' : strip_tags($str);
 };
 
 // Выделение задач, до даты выполнения которых осталось менее 24 часов
-function almost_elapsed($elapse_date): bool {
+function almost_elapsed($elapse_date = null): bool {
     $deadline = strtotime($elapse_date);
     $now = time();
     $diff = $deadline - $now;
@@ -52,13 +49,13 @@ function get_connection(array $database_config) {
 };
 
 // Получение проекта по ID
-function get_projects_by_id(int $project_id, $con): array {
+function get_project_by_id(int $project_id, $con): array {
     $sql =
         'SELECT id AS project_id, name FROM project '.
         'WHERE id = ?';
     $values = [$project_id];
     $projects = db_fetch_data($con, $sql, $values);
-    return $projects ? $projects[0] : null;
+    return $projects ? $projects[0] : [];
 }
 
 function get_projects_by_user_id(int $user_id, $con): array {
@@ -69,8 +66,7 @@ function get_projects_by_user_id(int $user_id, $con): array {
         'WHERE p.user_id = ? GROUP BY p.id '.
         'ORDER BY p.name';
     $values = [$user_id];
-    $projects = db_fetch_data($con, $sql, $values);
-    return $projects;
+    return db_fetch_data($con, $sql, $values);
 };
 
 function get_tasks_by_user_id(int $user_id, $con): array {
@@ -80,8 +76,7 @@ function get_tasks_by_user_id(int $user_id, $con): array {
         'JOIN project p ON t.project_id = p.id '.
         'WHERE t.user_id = ?';
     $values = [$user_id];
-    $tasks = db_fetch_data($con, $sql, $values);
-    return $tasks;
+    return db_fetch_data($con, $sql, $values);
 };
 
 function get_tasks_by_project_id(int $project_id, $con): array {
@@ -91,6 +86,5 @@ function get_tasks_by_project_id(int $project_id, $con): array {
         'JOIN project p ON t.project_id = p.id '.
         'WHERE project_id = ?';
     $values = [$project_id];
-    $tasks = db_fetch_data($con, $sql, $values);
-    return $tasks;
+    return db_fetch_data($con, $sql, $values);
 };
