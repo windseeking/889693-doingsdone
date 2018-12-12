@@ -14,7 +14,7 @@ $tasks = [];
 if (isset($_GET['project_id'])) {
     $project_id = (int)$_GET['project_id'];
     $project = get_project_by_id($project_id, $con);
-    if (s$project)) {
+    if (empty($project)) {
         die(http_response_code(404));
     }
     $tasks = get_tasks_by_project_id($project_id, $con);
