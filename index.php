@@ -14,7 +14,7 @@ $tasks = [];
 if (isset($_GET['project_id'])) {
     $project_id = (int)$_GET['project_id'];
     $project = get_project_by_id($project_id, $con);
-    if (empty($project)) {
+    if (s$project)) {
         die(http_response_code(404));
     }
     $tasks = get_tasks_by_project_id($project_id, $con);
@@ -22,7 +22,6 @@ if (isset($_GET['project_id'])) {
 else {
     $tasks = get_tasks_by_user_id($current_user_id, $con);
 }
-
 
 $page_title = 'Дела в порядке';
 

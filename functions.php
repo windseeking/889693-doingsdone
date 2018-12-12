@@ -88,3 +88,11 @@ function get_tasks_by_project_id(int $project_id, $con): array {
     $values = [$project_id];
     return db_fetch_data($con, $sql, $values);
 };
+
+function get_project_url(int $project_id): string {
+    $data = ['project_id' => $project_id];
+    $scriptname = 'index.php';
+    $query = http_build_query($data);
+    $url = '/' . $scriptname . '?' . $query;
+    return $url;
+};
