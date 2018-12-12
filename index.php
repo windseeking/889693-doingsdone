@@ -6,25 +6,22 @@ ini_set('display_errors', 1);
 require_once('functions.php');
 require_once('config/db.php');
 
-$con = get_connection($db);
+$con = get_connection($database_config);
 
 $cur_user = 1;
 
-$projects = get_projects_byUser($cur_user, $con);
-
 if (isset($_GET['project_id'])) {
-    $project_id = $_GET['project_id'];
-    $project = get_projects_byId($project_id, $con);
-    if (!$project) {
+    $project_id = (int)$_GET['project_id'];
+    $projects = get_projects_by_id($project_id, $con);
+    if (!$projects) {
         die(http_response_code(404));
     }
-    else {
-        $tasks = get_tasks_byProject($project_id, $con);
-    }
+    $tasks = get_tasks_by_project_id($project_id, $con);
 }
 else {
-    $tasks = get_tasks_byUser($cur_user, $con);
+    $tasks = get_tasks_by_user_id($cur_user, $con);
 }
+
 
 $page_title = 'Дела в порядке';
 
@@ -36,7 +33,7 @@ $page_content = include_template('index.php', [
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
     'title' => $page_title,
-    'projects' => $projects,
+    'projects' => get_projects_by_user_id($cur_user, $con)
 ]);
 
 print($layout_content);
