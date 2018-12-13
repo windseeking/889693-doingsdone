@@ -96,3 +96,16 @@ function get_project_url(int $project_id): string {
     $url = '/' . $scriptname . '?' . $query;
     return $url;
 };
+
+function add_task($con, string $title, string $deadline_at, string $file_url, int $project_id) {
+    $sql =
+        'INSERT INTO task (title, deadline_at, file_url, project_id, created_at) 
+        VALUES (?, ?, ?, ?, NOW())';
+    $stmt = db_get_prepare_stmt($con, $sql, [$title, $deadline_at, $file_url, $project_id]);
+    mysqli_stmt_execute($stmt);
+};
+
+function date_validation(int $date, $format = 'Y-m-d'): string {
+    $d = DateTime::createFromFormat($format, $date);
+    return $d && $d->format($format) == $date;
+};
