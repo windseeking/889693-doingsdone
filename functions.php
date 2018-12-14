@@ -105,7 +105,15 @@ function add_task($con, string $title, string $deadline_at, string $file_url, in
     mysqli_stmt_execute($stmt);
 };
 
-function date_validation(int $date, $format = 'Y-m-d'): string {
+function is_valid_date(string $date, $format = 'Y-m-d'): bool {
     $d = DateTime::createFromFormat($format, $date);
     return $d && $d->format($format) == $date;
+};
+
+function is_project_exists (array $projects, array $task): bool {
+    foreach ($projects as $project) {
+        if ($project['id'] == $task['project_id']) {
+            return true;
+        }
+    }
 };

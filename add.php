@@ -11,55 +11,55 @@ $con = get_connection($database_config);
 $current_user_id = 1;
 $projects = get_projects_by_user_id($current_user_id, $con);
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $task = $_POST['task'];
     $errors = [];
     // проверка имени задачи
     if (empty($task['title'])) {
             $errors['title'] = 'Обязательное поле';
         }
-    }
     // проверка существования проекта
     $is_project_exists = false;
-    foreach ($projects as $project) {
-        if($project['id'] == $tasks['project_id']) {
-            $is_project_exists = true;
-            break;
-        }
-    }
-    if(!$is_project_exists) {
+    if(!is_project_exists($projects, $task)) {
         $errors['project'] = 'Выберите существующий проект';
     }
-    // проверка формата даты
-    if ($tasks['deadline_at'] == '') {
-        $tasks['deadline_at'] = null;
+    // проверка формата даты    
+    if ($task['deadline_at'] == '') {
+        $task['deadline_at'] = null;
     }
-    else if (!date_validation($tasks['deadline_at'])) {
+    else if (!is_valid_date($task['deadline_at'])) {
         $errors['deadline_at'] = 'Некорректный формат даты';
     }
 
-    if (!empty($tasks['file_url'])) {
-        $filename = uniqid() . '-' . $_FILES['tasks']['title']['file_url'];
-        $tasks['file_url'] = $filename;
-        move_uploaded_file($_FILES['tasks']['tmp_name']['file_url'], 'uploads/' . $filename);
+    if (!empty($task['file_url'])) {
+        $file_name = uniqid() . '-' . $_FILES['task']['title'];
+        $file_path = __DIR__ . '/uploads';
+        $file_url = '/uploads/' . $file_name;
+
+        move_uploaded_file($_FILES['task']['tmp_name'], $file_path . $file_name);
+        print("<a href='$file_url'>$file_name</a>");
     }
     else {
-        $tasks['file_url'] = null;
+        $task['file_url'] = null;
     }
 
-    if (count($errors) > 0) {
-        $page_content = include_template('add.php', ['projects' => $projects, 'tasks' => $tasks, 'errors' => $errors]);
+    if (count($errors)) {
+        $page_content = include_template('add.php', ['projects' => $projects, 'errors' => $errors]);
     }
     else {
-        add_task($con, $tasks['title'], $tasks['deadline_at'], $tasks['file_url'], $tasks['project_id']);
+        add_task($con, $task['title'], $task['deadline_at'], $task['file_url'], $task['project_id']);
+        header('Location: index.php');
         die();
     }
-
-$page_title = 'Добавление задачи';
+}
+else {
+    $page_content = include_template('add.php', ['projects' => $projects]);
+}
 
 $layout_content = include_template('layout.php', [
     'content' => $page_content,
-    'title' => $page_title,
+    'title' => 'Добавление задачи',
     'projects' => $projects
 ]);
 
