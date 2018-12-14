@@ -23,17 +23,15 @@ else {
     $tasks = get_tasks_by_user_id($current_user_id, $con);
 }
 
-$page_title = 'Дела в порядке';
-
 $page_content = include_template('index.php', [
     'tasks' => $tasks,
     'show_complete_tasks' => $show_complete_tasks
 ]);
 
 $layout_content = include_template('layout.php', [
+    'side_content' => include_template('index_side_content.php', ['projects' => get_projects_by_user_id($current_user_id, $con)]),
     'content' => $page_content,
-    'title' => $page_title,
-    'projects' => get_projects_by_user_id($current_user_id, $con)
+    'title' => 'Дела в порядке'
 ]);
 
 print($layout_content);
