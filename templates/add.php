@@ -3,7 +3,7 @@
 <form class="form" method="post" enctype="multipart/form-data">
     <div class="form__row">
         <label class="form__label" for="name">Название <sup>*</sup></label>
-        <?php $class = isset($errors['title']) ? 'form__input--error' : ''; $value = isset($task['title']) ? filter_tags($task['title']) : ''; ?>
+        <?php $class = isset($errors['title']) ? 'form__input--error' : ''; $value = isset($task['title']) ? $task['title'] : ''; ?>
         <input class="form__input <?= $class; ?>" type="text" name="task[title]" id="name" value="<?= $value; ?>" placeholder="Введите название">
         <?php if (isset($errors['title'])): ?>
             <p class="form__message"><?= $errors['title']; ?></p>
@@ -12,14 +12,14 @@
 
     <div class="form__row">
         <label class="form__label" for="project">Проект <sup>*</sup></label>
-        <?php $class = isset($errors['project']) ? 'form__input--error' : ''; $value = isset($task['project_id']) ? $task['project_id'] : ''; ?>
+        <?php $class = isset($errors['project_id']) ? 'form__input--error' : ''; $value = isset($task['project_id']) ? $task['project_id'] : ''; ?>
         <select class="form__input form__input--select" name="task[project_id]" id="project">
             <?php foreach ($projects as $project): ?>
-                <option <?= $project['id'] === $value ? 'selected' : '' ?> value="<?= $value; ?>"><?= filter_tags($project['name']); ?></option>
+                <option <?= $project['id'] === $value ? 'selected' : '' ?> value="<?= $project['id'] ?>"><?= $project['name']; ?></option>
             <?php endforeach ?>
         </select>
-        <?php if (isset($errors['project'])): ?>
-            <p class="form__message"><?= $errors['project']; ?></p>
+        <?php if (isset($errors['project_id'])): ?>
+            <p class="form__message"><?= $errors['project_id']; ?></p>
         <?php endif; ?>
     </div>
 

@@ -1,24 +1,19 @@
 <?php
 
 require_once('mysql_helper.php');
-
 $show_complete_tasks = rand(0, 1);
 
 // Шаблонизатор
 function include_template(string $name, array $data): string {
     $name = 'templates/' . $name;
     $result = '';
-
     if (!file_exists($name)) {
         return $result;
     }
-
     ob_start();
     extract($data);
     require $name;
-
     $result = ob_get_clean();
-
     return $result;
 };
 
@@ -56,7 +51,7 @@ function get_project_by_id(int $project_id, $con): array {
     $values = [$project_id];
     $projects = db_fetch_data($con, $sql, $values);
     return $projects ? $projects[0] : [];
-}
+};
 
 function get_projects_by_user_id(int $user_id, $con): array {
     $sql =
@@ -97,23 +92,42 @@ function get_project_url(int $project_id): string {
     return $url;
 };
 
-function add_task($con, string $title, string $deadline_at, string $file_url, int $project_id) {
+function add_task($con, array $task) {
     $sql =
-        'INSERT INTO task (title, deadline_at, file_url, project_id, created_at) 
+        'INSERT INTO task (title, deadline_at, file_url, project_id, created_at)
         VALUES (?, ?, ?, ?, NOW())';
-    $stmt = db_get_prepare_stmt($con, $sql, [$title, $deadline_at, $file_url, $project_id]);
+    $values = [
+        $task['title'],
+        $task['deadline_at'],
+        $task['file_url'],
+        $task['project_id']
+    ];
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
     mysqli_stmt_execute($stmt);
 };
 
 function is_valid_date(string $date, $format = 'Y-m-d'): bool {
     $d = DateTime::createFromFormat($format, $date);
-    return $d && $d->format($format) == $date;
+    return $d && $d->format($format) === $date;
 };
 
-function is_project_exists (array $projects, array $task): bool {
-    foreach ($projects as $project) {
-        if ($project['id'] == $task['project_id']) {
-            return true;
-        }
+function is_project_exists($con, int $project_id): bool {
+    $project = get_project_by_id($project_id, $con);
+    if ($project = null) {
+        return false;
     }
+    return true;
+};
+
+function add_user($con, array $user) {
+    $sql =
+        'INSERT INTO user (email, password, name, created_at) 
+        VALUES (?, ?, ?, NOW())';
+    $values = [
+        $user['email'],
+        $user['name'],
+        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT)
+    ];
+    $stmt = db_get_prepare_stmt($con, $sql, $values);
+    mysqli_stmt_execute($stmt);
 };
