@@ -1,4 +1,3 @@
-<main class="content__main">
     <h2 class="content__main-heading">Регистрация аккаунта</h2>
 
     <form class="form" method="post">
@@ -34,5 +33,3 @@
             <input class="button" type="submit" name="" value="Зарегистрироваться">
         </div>
     </form>
-</main>
-</div>

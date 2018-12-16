@@ -121,7 +121,7 @@ function is_project_exists($con, int $project_id): bool {
 
 function add_user($con, array $user) {
     $sql =
-        'INSERT INTO user (email, password, name, created_at) 
+        'INSERT INTO user (email, name, password, created_at) 
         VALUES (?, ?, ?, NOW())';
     $values = [
         $user['email'],
