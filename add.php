@@ -40,10 +40,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $task['file_url'] = null;
     }
     if (empty($errors)) {
-        add_task($con, $task);
+        add_task($con, $task, $current_user_id);
+        header('Location: index.php');
         die();
     }
-    $page_content = include_template('add.php', ['projects' => $projects, 'task' => $task, 'errors' => $errors]);
+    $page_content = include_template('add.php', [
+        'projects' => $projects,
+        'task' => $task,
+        'errors' => $errors]);
 }
 else {
     $page_content = include_template('add.php', [

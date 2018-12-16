@@ -92,15 +92,16 @@ function get_project_url(int $project_id): string {
     return $url;
 };
 
-function add_task($con, array $task) {
+function add_task($con, array $task, int $user_id) {
     $sql =
-        'INSERT INTO task (title, deadline_at, file_url, project_id, created_at)
-        VALUES (?, ?, ?, ?, NOW())';
+        'INSERT INTO task (title, deadline_at, file_url, project_id, user_id, created_at)
+        VALUES (?, ?, ?, ?, ?, NOW())';
     $values = [
         $task['title'],
         $task['deadline_at'],
         $task['file_url'],
-        $task['project_id']
+        $task['project_id'],
+        $user_id
     ];
     $stmt = db_get_prepare_stmt($con, $sql, $values);
     mysqli_stmt_execute($stmt);
@@ -113,7 +114,7 @@ function is_valid_date(string $date, $format = 'Y-m-d'): bool {
 
 function is_project_exists($con, int $project_id): bool {
     $project = get_project_by_id($project_id, $con);
-    if ($project = null) {
+    if ($project === null) {
         return false;
     }
     return true;
